@@ -1,0 +1,9 @@
+{
+    "name": "jiri-bok/curl-kinesis-rst-issue",
+    "description": "Reproduce curl kinesis rst issue",
+    "type": "project",
+    "require": {
+        "aws/aws-sdk-php": "*",
+        "ext-curl": "*"
+    }
+}

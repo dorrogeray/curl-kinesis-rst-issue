@@ -1,0 +1,35 @@
+version: '3.5'
+services:
+  kinesalite:
+    build:
+       context: .
+       dockerfile: docker/kinesis/Dockerfile
+    ports:
+      - "4568:4567"
+    environment:
+      AWS_ACCESS_KEY_ID: root
+      AWS_SECRET_ACCESS_KEY: root
+    volumes:
+      - ./docker/kinesis/ssl:/usr/src/app/node_modules/kinesalite/ssl
+    networks:
+      curl-kinesis-rst-issue:
+        aliases:
+          - kinesalite
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        UID: 1000 # Set to your user id
+        GID: 1000 # Set to your group id
+    command: [ "sleep", "365d" ]
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - curl-kinesis-rst-issue
+
+networks:
+  curl-kinesis-rst-issue:
+    name: curl-kinesis-rst-issue
