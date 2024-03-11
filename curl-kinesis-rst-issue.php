@@ -41,7 +41,7 @@ $kinesisClient->putRecord(
     ],
 );
 
-sleep(6);
+sleep(15);
 
 $kinesisClient->putRecord(
     [
