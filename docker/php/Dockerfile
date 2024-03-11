@@ -22,6 +22,23 @@ RUN wget https://www.php.net/distributions/php-8.2.16.tar.gz && \
     make && \
     make install
 
+# Download and compile Xdebug
+RUN wget https://xdebug.org/files/xdebug-3.3.1.tgz && \
+    tar -xzf xdebug-3.3.1.tgz && \
+    cd xdebug-3.3.1 && \
+    phpize && \
+    ./configure --enable-xdebug && \
+    make && \
+    make install
+
+# Create a php.ini file and add Xdebug extension to it
+RUN echo "zend_extension=xdebug.so" >> /usr/local/lib/php.ini && \
+    echo "xdebug.mode=debug" >> /usr/local/lib/php.ini && \
+    echo "xdebug.start_with_request=yes" >> /usr/local/lib/php.ini && \
+    echo "xdebug.trigger_value=StartXdebug" >> /usr/local/lib/php.ini && \
+    echo "xdebug.client_host=host.docker.internal" >> /usr/local/lib/php.ini && \
+    echo "xdebug.client_port=9003" >> /usr/local/lib/php.ini
+
 # Begin the final stage
 FROM debian:buster
 
@@ -35,6 +52,7 @@ RUN apt-get update && \
 COPY --from=build /usr/local/bin/php /usr/local/bin/
 COPY --from=build /usr/local/lib/php /usr/local/lib/php
 COPY --from=build /usr/local/include/php /usr/local/include/php
+COPY --from=build /usr/local/lib/php.ini /usr/local/lib/php.ini
 
 # Copy the cURL binary and libraries from the build stage
 COPY --from=build /usr/local/bin/curl /usr/local/bin/

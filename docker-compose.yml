@@ -27,6 +27,10 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
+    environment:
+      PHP_IDE_CONFIG: serverName=curl-kinesis-rst-issue
+    extra_hosts:
+      - host.docker.internal:host-gateway
     networks:
       - curl-kinesis-rst-issue
 
